@@ -3,6 +3,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import './App.css'
 import { AppSidebar } from './components/app-sidebar'
 import { Snippet } from './components/snippet'
+import { Header } from './components/header'
 
 function App() {
 
@@ -11,9 +12,9 @@ function App() {
       <SidebarProvider>
         <AppSidebar></AppSidebar>
         <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <Header>
             <SidebarTrigger className="-ml-1" />
-          </header>
+          </Header>
           <div className="flex flex-1 flex-col gap-4 p-4">
             <Snippet title='For loop' description='Basic for loop'></Snippet>
           </div>
