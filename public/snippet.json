@@ -1,0 +1,26 @@
+[
+  {
+    "name": "For loop",
+    "description": "Simplest of all for loops",
+    "lang": "js",
+    "rawCode": [
+      "async function highlightCode(code: string) {",
+      "\tconst file = await unified()",
+      "\t\t.use(remarkParse)",
+      "\t\t.use(remarkRehype)",
+      "\t\t.use(rehypePrettyCode, {",
+      "\t\t\ttransformers: [",
+      "\t\t\t\ttransformerCopyButton({",
+      "\t\t\t\t\tvisibility: 'always',",
+      "\t\t\t\t\tfeedbackDuration: 3_000,",
+      "\t\t\t\t}),",
+      "\t\t\t],",
+      "\t\t})",
+      "\t\t.use(rehypeStringify)",
+      "\t\t.process(code);",
+      "",
+      "\treturn String(file);",
+      "}"
+    ]
+  }
+]

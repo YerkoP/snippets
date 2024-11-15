@@ -4,11 +4,13 @@ import './App.css'
 import { AppSidebar } from './components/app-sidebar'
 import { Snippet } from './components/snippet'
 import { Header } from './components/header'
+import { SnippetContext, useSnippet } from './hooks/use-snippet'
 
 function App() {
-
+  const [ snippets ] = useSnippet()
   return (
     <>
+    <SnippetContext.Provider value={snippets}>
       <SidebarProvider>
         <AppSidebar></AppSidebar>
         <SidebarInset>
@@ -16,10 +18,17 @@ function App() {
             <SidebarTrigger className="-ml-1" />
           </Header>
           <div className="flex flex-1 flex-col gap-4 p-4">
-            <Snippet title='For loop' description='Basic for loop'></Snippet>
+            {snippets && snippets.map(snippet => (
+              <Snippet 
+                key={snippet.name}
+                name={snippet.name || ''} 
+                description={snippet.description || ''}
+                rawCode={snippet.rawCode}></Snippet>
+            ))}
           </div>
         </SidebarInset>
       </SidebarProvider>
+    </SnippetContext.Provider>
     </>
   )
 }
