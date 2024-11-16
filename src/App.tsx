@@ -1,10 +1,10 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 
 import './App.css'
-import { AppSidebar } from './components/app-sidebar'
-import { Snippet } from './components/snippet'
-import { Header } from './components/header'
-import { SnippetContext, useSnippet } from './hooks/use-snippet'
+import { AppSidebar } from '@/components/app-sidebar'
+import { Snippet } from '@/components/snippet'
+import { Header } from '@/components/header'
+import { SnippetContext, useSnippet } from '@/hooks/use-snippet'
 
 function App() {
   const [ snippets ] = useSnippet()

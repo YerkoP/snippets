@@ -26,7 +26,8 @@ export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
         .then(response => response.json())
         .then(data => setPublicSnippets(data))
     }
-    load()
+    if (!publicSnippets || publicSnippets.length === 0)
+      load()
   }, [publicSnippets])
 
   return [ publicSnippets ]

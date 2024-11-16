@@ -1,0 +1,36 @@
+.editor section,
+.editor textarea {
+  grid-area: 1 / 1 / 2 / 2;
+}
+.editor textarea {
+  background-color: transparent;
+  color: transparent;
+  overflow: auto;
+  resize: none;
+  caret-color: #fff;
+  width: 100%;
+  z-index: 1;
+  border-radius: .5rem;
+  padding: .75rem 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  margin: 0;
+  top: 0;
+  position: relative;
+  height: 100%;
+  font-size: 1rem;
+  border: 1px solid var(--sl-color-gray-5);
+  line-height: 2;
+}
+.editor figure {
+  margin: 0 !important;
+  height: 100%;
+}
+.editor pre {
+  height: 100%;
+}
+.editor section {
+  height: 300px;
+  max-width: 29rem;
+}

@@ -1,10 +1,11 @@
-import { LogIn, LogOut } from "lucide-react";
-import { Button } from "./ui/button";
+import { Code, LogIn, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useAuth0 } from '@auth0/auth0-react'
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "./ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { SnippetForm } from "@/components/snippet-form";
 
 export function Header({ children }: React.ComponentProps<'header'>) {
   const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
@@ -35,20 +36,29 @@ export function Header({ children }: React.ComponentProps<'header'>) {
               </a>
             </Button>
             {isAuthenticated ?
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Avatar>
-                    <AvatarImage src={user?.picture} alt={user?.nickname} />
-                    <AvatarFallback>{getAvatarFallback(user?.name || '')}</AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => logoutWithRedirect()}>
-                    <LogOut />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Dialog>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar>
+                      <AvatarImage src={user?.picture} alt={user?.nickname} />
+                      <AvatarFallback>{getAvatarFallback(user?.name || '')}</AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DialogTrigger asChild>
+                      <DropdownMenuItem>
+                        <Code />
+                        <span>Add snippet</span>
+                      </DropdownMenuItem>
+                    </DialogTrigger>
+                    <DropdownMenuItem onClick={() => logoutWithRedirect()}>
+                      <LogOut />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <SnippetForm></SnippetForm>
+              </Dialog>
               :
               <TooltipProvider>
                 <Tooltip>

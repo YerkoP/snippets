@@ -4,28 +4,29 @@ import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import rehypePrettyCode from 'rehype-pretty-code';
 import { transformerCopyButton } from '@rehype-pretty/transformers';
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import './code.css'
 
-/**
- * Server Component example
- */
-
-export function Code({ code }: { code: string }) {
+export interface CodeProps { code: string, copyButton?: 'always' | 'hover' | undefined }
+const Code = forwardRef<
+  React.ElementRef<'section'>,
+  CodeProps
+>(({ code, copyButton }, ref) => {
   const [highlightedCode, setHighlightedCode] = useState('');
 
   useEffect(() => {
     async function highlightCode(code: string) {
+      const transformers = copyButton ? [
+        transformerCopyButton({
+          visibility: copyButton,
+          feedbackDuration: 3_000,
+        }),
+      ] : []
       const file = await unified()
         .use(remarkParse)
         .use(remarkRehype)
         .use(rehypePrettyCode, {
-          transformers: [
-            transformerCopyButton({
-              visibility: 'always',
-              feedbackDuration: 3_000,
-            }),
-          ],
+          transformers
         })
         .use(rehypeStringify)
         .process(code);
@@ -38,11 +39,13 @@ export function Code({ code }: { code: string }) {
   }, [code])
   return (
     <section
+      ref={ref}
       className='w-full rounded-md [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto'
       dangerouslySetInnerHTML={{
         __html: highlightedCode,
       }}
     />
   );
-}
+})
 
+export { Code }

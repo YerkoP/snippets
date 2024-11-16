@@ -25,7 +25,7 @@ ${rawCode && rawCode.join('\n')}
           <TabsTrigger value="vscode">VsCode</TabsTrigger>
         </TabsList>
         <TabsContent value="code">
-          <Code code={codeContent}></Code>
+          <Code code={codeContent} copyButton='always'></Code>
         </TabsContent>
         <TabsContent value="vscode">Change your password here.</TabsContent>
       </Tabs>
