@@ -7,18 +7,30 @@ export class SnippetCode {
   rawCode?: string[]
 }
 
+export interface Lang {
+  id: string;
+  name: string;
+  count: number;
+}
+
 export interface SnippetConfig {
-  url: string
+  url: string;
+  langUrl: string;
 }
 
 const DEFAULT_CONFIG: SnippetConfig = {
-  url: 'snippet.json'
+  url: 'snippet.json',
+  langUrl: 'langs.json'
 }
 
-export const SnippetContext = createContext<SnippetCode[]>([])
+export const SnippetContext = createContext<{
+  snippets?: SnippetCode[],
+  langs?: Lang[]
+}>({})
 
 export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
   const [ publicSnippets, setPublicSnippets ] = useState<SnippetCode[]>([])
+  const [ langs, setLangs ] = useState<Lang[]>([])
 
   useEffect(() => {
     const load = () => {
@@ -26,9 +38,18 @@ export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
         .then(response => response.json())
         .then(data => setPublicSnippets(data))
     }
+
+    const loadLangs = () => {
+      fetch(config.langUrl)
+        .then(response => response.json())
+        .then(data => setLangs(data))
+    }
     if (!publicSnippets || publicSnippets.length === 0)
       load()
-  }, [publicSnippets])
 
-  return [ publicSnippets ]
+    if (!langs || langs.length === 0)
+      loadLangs()
+  }, [publicSnippets, langs])
+
+  return { snippets: publicSnippets, langs }
 }
