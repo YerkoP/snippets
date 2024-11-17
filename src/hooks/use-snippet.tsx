@@ -6,7 +6,9 @@ export class SnippetCode {
   name?: string;
   description?: string;
   lang?: string;
-  rawCode?: string[]
+  rawCode?: string[];
+  prefix?: string[];
+  isFile?: boolean;
 }
 
 export interface Lang {

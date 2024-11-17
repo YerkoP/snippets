@@ -2,10 +2,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Code } from '@/components/code'
 import { SnippetCode } from '@/hooks/use-snippet';
 
-export function Snippet({ name, description, rawCode }: SnippetCode) {
+export function Snippet({ name, description, rawCode, lang, prefix, isFile }: SnippetCode) {
   const codeContent = `
-\`\`\`ts showLineNumbers
+\`\`\`${lang} showLineNumbers
 ${rawCode && rawCode.join('\n')}
+\`\`\`
+`
+  const vsCodeJson = `
+\`\`\`json showLineNumbers
+{
+  "${name}": {
+    "prefix": ["${prefix ? prefix.join('","') : name?.split(' ').join('-')}"],
+    "body": ["${rawCode?.join('","')}"],
+    "description": "${description}" ${isFile ? ', "isFileTemplate": true ' : ''}
+  }
+}
 \`\`\`
 `
   return (
@@ -21,7 +32,9 @@ ${rawCode && rawCode.join('\n')}
         <TabsContent value="code">
           <Code code={codeContent} copyButton='always'></Code>
         </TabsContent>
-        <TabsContent value="vscode">Change your password here.</TabsContent>
+        <TabsContent value="vscode">
+          <Code code={vsCodeJson} copyButton='always'></Code>
+        </TabsContent>
       </Tabs>
 
     </div>

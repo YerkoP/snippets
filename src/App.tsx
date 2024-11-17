@@ -24,6 +24,7 @@ function App() {
                 id={snippet.id}
                 name={snippet.name || ''} 
                 description={snippet.description || ''}
+                lang={snippet.lang}
                 rawCode={snippet.rawCode}></Snippet>
             ))}
           </div>

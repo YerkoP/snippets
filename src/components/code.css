@@ -1,3 +1,6 @@
+section {
+  max-width: calc(100vw - 18rem);
+}
 pre {
   border-radius:.5rem;
   padding-left:0!important;
