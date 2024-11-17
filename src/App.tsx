@@ -20,7 +20,8 @@ function App() {
           <div className="flex flex-1 flex-col gap-4 p-4">
             {snippets && snippets.map(snippet => (
               <Snippet 
-                key={snippet.name}
+                key={snippet.id}
+                id={snippet.id}
                 name={snippet.name || ''} 
                 description={snippet.description || ''}
                 rawCode={snippet.rawCode}></Snippet>

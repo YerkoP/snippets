@@ -2,12 +2,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Code } from '@/components/code'
 import { SnippetCode } from '@/hooks/use-snippet';
 
-export interface SnipperProps {
-  title: string;
-  description: string
-}
-
-
 export function Snippet({ name, description, rawCode }: SnippetCode) {
   const codeContent = `
 \`\`\`ts showLineNumbers
