@@ -6,6 +6,7 @@ import rehypePrettyCode from 'rehype-pretty-code';
 import { transformerCopyButton } from '@rehype-pretty/transformers';
 import { forwardRef, useEffect, useState } from 'react';
 import './code.css'
+import { useSidebar } from './ui/sidebar';
 
 export interface CodeProps { code: string, copyButton?: 'always' | 'hover' | undefined }
 const Code = forwardRef<
@@ -13,6 +14,7 @@ const Code = forwardRef<
   CodeProps
 >(({ code, copyButton }, ref) => {
   const [highlightedCode, setHighlightedCode] = useState('');
+  const { open } = useSidebar()
 
   useEffect(() => {
     async function highlightCode(code: string) {
@@ -40,7 +42,7 @@ const Code = forwardRef<
   return (
     <section
       ref={ref}
-      className='w-full rounded-md [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto'
+      className={'w-full rounded-md [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto ' + !open ? 'with-sidebar' : ''}
       dangerouslySetInnerHTML={{
         __html: highlightedCode,
       }}

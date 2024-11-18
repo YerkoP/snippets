@@ -13,7 +13,7 @@ ${rawCode && rawCode.join('\n')}
 {
   "${name}": {
     "prefix": ["${prefix ? prefix.join('","') : name?.split(' ').join('-')}"],
-    "body": ["${rawCode?.join('","')}"],
+    "body": ["${rawCode?.join('",\n"')}"],
     "description": "${description}" ${isFile ? ', "isFileTemplate": true ' : ''}
   }
 }
