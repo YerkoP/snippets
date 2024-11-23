@@ -3,7 +3,7 @@
     "id": "bd4d099b-3d39-4aad-a59c-c45dfac8eaf0",
     "name": "For loop",
     "description": "Simplest of all for loops",
-    "lang": "ts",
+    "lang": "typescript",
     "rawCode": [
       "async function highlightCode(code: string) {",
       "\tconst file = await unified()",

@@ -29,7 +29,9 @@ const DEFAULT_CONFIG: SnippetConfig = {
 
 export const SnippetContext = createContext<{
   snippets?: SnippetCode[],
-  langs?: Lang[]
+  langs?: Lang[],
+  setSnippets?: React.Dispatch<React.SetStateAction<SnippetCode[]>>,
+  setLangs?: React.Dispatch<React.SetStateAction<Lang[]>>
 }>({})
 
 export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
@@ -38,12 +40,25 @@ export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
   const [ dbReady, setDbReady ] = useState<boolean>(false)
 
   useEffect(() => {
+    let langsCounted = false
     const load = () => {
       fetch(config.url)
         .then(response => response.json())
         .then(data => {
           setPublicSnippets(data)
-          bulkAddData(Stores.Snippets, data)
+          return bulkAddData(Stores.Snippets, data)
+        })
+        .then(snippets => {
+          if (!langsCounted && snippets && snippets.length > 0) {
+            for(const snippet of snippets as SnippetCode[]) {
+              const lang = langs.find(l => l.id === snippet.lang)
+              if (lang) {
+                lang.count++
+              }
+            }
+            langsCounted = true
+            setLangs(langs)
+          }
         })
     }
 
@@ -52,13 +67,25 @@ export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
         .then(response => response.json())
         .then(data => {
           setLangs(data)
-          bulkAddData(Stores.Langs, data)
+          return bulkAddData<Lang>(Stores.Langs, data)
+        })
+        .then((storedLangs: Lang[]) => {
+          if (!langsCounted && publicSnippets && publicSnippets.length > 0) {
+            for(const snippet of publicSnippets) {
+              const lang = storedLangs.find(l => l.id === snippet.lang)
+              if (lang) {
+                lang.count++
+              }
+            }
+            langsCounted = true
+            setLangs(storedLangs)
+          }
         })
     }
     if (dbReady && (!publicSnippets || publicSnippets.length === 0))
       load()
 
-    if (dbReady && (!langs || langs.length === 0))
+    if (dbReady && publicSnippets && publicSnippets.length > 0 && (!langs || langs.length === 0))
       loadLangs()
 
     if (!dbReady) {
@@ -67,5 +94,5 @@ export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
     }
   }, [publicSnippets, langs, dbReady])
 
-  return { snippets: publicSnippets, langs }
+  return { snippets: publicSnippets, langs, setSnippets: setPublicSnippets, setLangs }
 }

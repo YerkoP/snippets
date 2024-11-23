@@ -25,7 +25,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
           <SidebarMenu>
-              {snippetContext.langs?.map((item) => (
+              {snippetContext.langs?.filter(item => item.count > 0).map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton asChild>
                     <a href="#">

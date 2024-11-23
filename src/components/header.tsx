@@ -6,9 +6,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { SnippetForm } from "@/components/snippet-form";
+import { useState } from "react";
 
 export function Header({ children }: React.ComponentProps<'header'>) {
   const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
+  const [ reset, setReset ] = useState(false)
 
   const getAvatarFallback = (name: string) => {
     return name.split(' ').reduce((a, b) => a.toUpperCase() + b[0].toUpperCase(), '').slice(0, 2)
@@ -36,7 +38,7 @@ export function Header({ children }: React.ComponentProps<'header'>) {
               </a>
             </Button>
             {isAuthenticated ?
-              <Dialog>
+              <Dialog onOpenChange={open => setReset(!open)}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar>
@@ -57,7 +59,7 @@ export function Header({ children }: React.ComponentProps<'header'>) {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <SnippetForm></SnippetForm>
+                <SnippetForm reset={reset}></SnippetForm>
               </Dialog>
               :
               <TooltipProvider>

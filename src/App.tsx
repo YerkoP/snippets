@@ -7,10 +7,10 @@ import { Header } from '@/components/header'
 import { SnippetContext, useSnippet } from '@/hooks/use-snippet'
 
 function App() {
-  const { snippets, langs } = useSnippet()
+  const { snippets, langs, setSnippets, setLangs } = useSnippet()
   return (
     <>
-    <SnippetContext.Provider value={{ snippets, langs }}>
+    <SnippetContext.Provider value={{ snippets, langs, setSnippets, setLangs }}>
       <SidebarProvider>
         <AppSidebar></AppSidebar>
         <SidebarInset>

@@ -49,9 +49,8 @@ export const initDB = (): Promise<boolean> => {
   });
 };
 
-export const bulkAddData = <T extends IndexedData>(storeName: Stores, data: T[]): Promise<T[]|string|null> => {
-  return new Promise((resolve) => {
-    let i = 0
+export const bulkAddData = <T extends IndexedData>(storeName: Stores, data: T[]): Promise<T[]> => {
+  return new Promise((resolve, reject) => {
     request = indexedDB.open(DB_NAME, version);
 
     request.onsuccess = (event) => {
@@ -61,27 +60,29 @@ export const bulkAddData = <T extends IndexedData>(storeName: Stores, data: T[])
       let currentData: any[]
       const res = store.getAll();
 
-      const addNext = () => {
+      const addNext = (i: number) => {
         if (i < data.length) {
-          if (!currentData.some(d => d.id === data[i].id))
-            store.add(data[i]).onsuccess = addNext;
-          i++
+          if (!currentData.some(d => d.id === data[i].id)) {
+            store.add(data[i]).onsuccess = () => addNext(i + 1);
+          } else {
+            addNext(i + 1)
+          }
         } else {
           resolve(data)
         }
       }
       res.onsuccess = () => {
         currentData = res.result
-        addNext()
+        addNext(0)
       };
     };
 
     request.onerror = () => {
       const error = request.error?.message
       if (error) {
-        resolve(error);
+        reject(error);
       } else {
-        resolve('Unknown error');
+        reject('Unknown error');
       }
     };
   });
@@ -142,3 +143,52 @@ export const getStoreDataByKey = <T>(storeName: Stores, key: any): Promise<T[]> 
   });
 }
 
+export const bulkUpdateData = <T>(storeName: Stores, data: T[]): Promise<IDBValidKey|string|null> => {
+  return new Promise((resolve) => {
+    request = indexedDB.open(DB_NAME);
+
+    request.onsuccess = (event) => {
+      db = (event.target as IDBOpenDBRequest).result;
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const res = store.put(data)
+      res.onsuccess = () => {
+        resolve(res.result);
+      };
+    };
+
+    request.onerror = () => {
+      const error = request.error?.message
+      if (error) {
+        resolve(error);
+      } else {
+        resolve('Unknown error');
+      }
+    };
+  });
+}
+
+export const updateData = <T>(storeName: Stores, key: any, data: T): Promise<IDBValidKey|string|null> => {
+  return new Promise((resolve) => {
+    request = indexedDB.open(DB_NAME);
+
+    request.onsuccess = (event) => {
+      db = (event.target as IDBOpenDBRequest).result;
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const res = store.put(data, key)
+      res.onsuccess = () => {
+        resolve(res.result);
+      };
+    };
+
+    request.onerror = () => {
+      const error = request.error?.message
+      if (error) {
+        resolve(error);
+      } else {
+        resolve('Unknown error');
+      }
+    };
+  });
+}
