@@ -149,7 +149,7 @@ export const bulkUpdateData = <T>(storeName: Stores, data: T[]): Promise<IDBVali
 
     request.onsuccess = (event) => {
       db = (event.target as IDBOpenDBRequest).result;
-      const tx = db.transaction(storeName, 'readonly');
+      const tx = db.transaction(storeName, 'readwrite');
       const store = tx.objectStore(storeName);
       const res = store.put(data)
       res.onsuccess = () => {
@@ -168,15 +168,15 @@ export const bulkUpdateData = <T>(storeName: Stores, data: T[]): Promise<IDBVali
   });
 }
 
-export const updateData = <T>(storeName: Stores, key: any, data: T): Promise<IDBValidKey|string|null> => {
+export const updateData = <T>(storeName: Stores, data: T): Promise<IDBValidKey|string|null> => {
   return new Promise((resolve) => {
     request = indexedDB.open(DB_NAME);
 
     request.onsuccess = (event) => {
       db = (event.target as IDBOpenDBRequest).result;
-      const tx = db.transaction(storeName, 'readonly');
+      const tx = db.transaction(storeName, 'readwrite');
       const store = tx.objectStore(storeName);
-      const res = store.put(data, key)
+      const res = store.put(data)
       res.onsuccess = () => {
         resolve(res.result);
       };

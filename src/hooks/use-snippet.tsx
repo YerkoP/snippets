@@ -40,7 +40,6 @@ export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
   const [ dbReady, setDbReady ] = useState<boolean>(false)
 
   useEffect(() => {
-    let langsCounted = false
     const load = () => {
       fetch(config.url)
         .then(response => response.json())
@@ -48,36 +47,23 @@ export function useSnippet(config: SnippetConfig = DEFAULT_CONFIG) {
           setPublicSnippets(data)
           return bulkAddData(Stores.Snippets, data)
         })
-        .then(snippets => {
-          if (!langsCounted && snippets && snippets.length > 0) {
-            for(const snippet of snippets as SnippetCode[]) {
-              const lang = langs.find(l => l.id === snippet.lang)
-              if (lang) {
-                lang.count++
-              }
-            }
-            langsCounted = true
-            setLangs(langs)
-          }
-        })
     }
 
     const loadLangs = () => {
       fetch(config.langUrl)
         .then(response => response.json())
         .then(data => {
-          setLangs(data)
+          // setLangs(data)
           return bulkAddData<Lang>(Stores.Langs, data)
         })
         .then((storedLangs: Lang[]) => {
-          if (!langsCounted && publicSnippets && publicSnippets.length > 0) {
+          if (publicSnippets && publicSnippets.length > 0) {
             for(const snippet of publicSnippets) {
               const lang = storedLangs.find(l => l.id === snippet.lang)
               if (lang) {
                 lang.count++
               }
             }
-            langsCounted = true
             setLangs(storedLangs)
           }
         })

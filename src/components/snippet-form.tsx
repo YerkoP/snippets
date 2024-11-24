@@ -92,7 +92,7 @@ ${rawCode}
               foundLang.count++
               snippetContext.langs[foundLangId] = foundLang
               snippetContext.setLangs && snippetContext.setLangs(snippetContext.langs)
-              return updateData(Stores.Langs, foundLang.id, foundLang)
+              return updateData(Stores.Langs, foundLang)
             }
           }
         }

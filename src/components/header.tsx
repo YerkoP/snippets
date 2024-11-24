@@ -6,11 +6,27 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { SnippetForm } from "@/components/snippet-form";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { getStoreData, Stores } from "@/lib/db";
+import { Lang, SnippetCode, SnippetContext } from "@/hooks/use-snippet";
 
 export function Header({ children }: React.ComponentProps<'header'>) {
   const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
   const [ reset, setReset ] = useState(false)
+  const snippetContext = useContext(SnippetContext)
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      Promise.all([
+        getStoreData<Lang>(Stores.Langs),
+        getStoreData<SnippetCode>(Stores.Snippets)
+      ])
+        .then(([ langs, snippets ]: [ Lang[], SnippetCode[] ]) => {
+          snippetContext.setLangs && snippetContext.setLangs(langs)
+          snippetContext.setSnippets && snippetContext.setSnippets(snippets)
+        })
+    }
+  }, [ isAuthenticated ])
 
   const getAvatarFallback = (name: string) => {
     return name.split(' ').reduce((a, b) => a.toUpperCase() + b[0].toUpperCase(), '').slice(0, 2)
